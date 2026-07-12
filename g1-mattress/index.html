@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G-one Mattress | Premium Sleep Experience</title>
+    <!-- Google Fonts: Outfit & Playfair Display -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@1,600;1,700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Cropper.js CSS for the Image Cropping Feature -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#fdfdf6',
+                            100: '#fbf9eb',
+                            500: '#f59e0b', // Amber primary
+                            600: '#d97706',
+                            700: '#b45309',
+                            950: '#020617', // Slate dark background
+                            900: '#0f172a',
+                            800: '#1e293b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Smooth transitions & custom scrollbar */
+        html {
+            scroll-behavior: smooth;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #020617;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #f59e0b;
+        }
+
+        /* Premium Background Gradient for Hero */
+        .hero-bg {
+            background: linear-gradient(to bottom, rgba(2, 6, 23, 0.75), rgba(2, 6, 23, 0.98)), 
+                        url('https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&q=80&w=1200');
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* Glassmorphism Classes */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .glass-nav {
+            background: rgba(2, 6, 23, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-brand-950 font-sans min-h-screen flex flex-col text-slate-100 antialiased">
+
+    <!-- Navigation Bar (Hidden Admin trigger on Logo click) -->
+    <nav class="glass-nav sticky top-0 z-50 shadow-2xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center w-full">
+                <!-- Logo with secret click counter trigger -->
+                <div class="flex items-center cursor-pointer py-2 select-none" onclick="handleLogoClick()">
+                    <img src="logo.jpeg" alt="G-one Mattress Logo" class="h-12 w-auto object-contain hover:scale-105 transition-transform duration-300" onerror="this.src='https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&q=80&w=100'; this.style.borderRadius='4px';">
+                    <span class="ml-3 font-black text-base sm:text-xl tracking-tight text-white block">G-ONE <span class="text-amber-500">MATTRESS</span></span>
+                </div>
+
+                <!-- Customer Main Menu (No Admin Switch shown) -->
+                <div class="hidden md:flex gap-8 items-center">
+                    <button onclick="showCatalogView()" class="text-sm font-bold text-slate-300 hover:text-amber-500 tracking-wide transition">Shop</button>
+                    <button onclick="scrollToContact()" class="text-sm font-bold text-slate-300 hover:text-amber-500 tracking-wide transition">Contact Us</button>
+                    <a href="https://wa.me/919048437561" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 rounded-lg text-sm font-bold tracking-wide transition shadow-lg shadow-emerald-950/50 flex items-center gap-2">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397 0 11.948 0c3.179.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.902-11.89 11.902-2.01-.001-3.987-.51-5.742-1.477L0 24zm6.154-3.561l.411.244c1.573.932 3.394 1.424 5.26 1.425 5.735 0 10.4-4.646 10.403-10.36.002-2.768-1.077-5.37-3.04-7.336C17.221 2.446 14.61 1.365 11.85 1.365c-5.741 0-10.406 4.649-10.41 10.366-.002 1.834.48 3.627 1.396 5.202l.258.444-1.022 3.735 3.821-1.002z"/></svg>
+                        Quick Chat
+                    </a>
+                </div>
+
+                <button id="menuBtn" class="md:hidden text-white focus:outline-none hover:text-amber-500 transition">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobileMenu" class="hidden md:hidden bg-brand-950 border-b border-slate-800 p-4 space-y-3 transition-all duration-300">
+            <button onclick="showCatalogView(); toggleMenu()" class="block w-full text-left p-3 text-white font-bold hover:bg-slate-900 rounded-lg transition">Shop</button>
+            <button onclick="scrollToContact(); toggleMenu()" class="block w-full text-left p-3 text-white font-bold hover:bg-slate-900 rounded-lg transition">Contact Us</button>
+            <a href="https://wa.me/919048437561" target="_blank" onclick="toggleMenu()" class="flex items-center gap-2 w-full text-left p-3 text-emerald-500 font-bold hover:bg-slate-900 rounded-lg transition">
+                <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397 0 11.948 0c3.179.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.902-11.89 11.902-2.01-.001-3.987-.51-5.742-1.477L0 24zm6.154-3.561l.411.244c1.573.932 3.394 1.424 5.26 1.425 5.735 0 10.4-4.646 10.403-10.36.002-2.768-1.077-5.37-3.04-7.336C17.221 2.446 14.61 1.365 11.85 1.365c-5.741 0-10.406 4.649-10.41 10.366-.002 1.834.48 3.627 1.396 5.202l.258.444-1.022 3.735 3.821-1.002z"/></svg>
+                Chat on WhatsApp
+            </a>
+        </div>
+    </nav>
+
+    <!-- PREMIUM HERO DISPLAY HEADLINE SECTION -->
+    <header id="mainHeroSection" class="hero-bg py-28 px-4 sm:px-6 lg:px-8 text-center border-b border-slate-900/60 relative">
+        <div class="max-w-4xl mx-auto">
+            <span class="text-xs sm:text-sm font-bold uppercase tracking-widest text-amber-500 bg-amber-500/10 border border-amber-500/30 px-5 py-2 rounded-full shadow-lg shadow-amber-950/20">
+                INDIA'S PREMIUM MATTRESS · FACTORY DIRECT
+            </span>
+            <h1 class="text-4xl sm:text-6xl md:text-7xl font-black text-white tracking-tight mt-8 mb-6 leading-none">
+                Sleep Like <br class="sm:hidden"><span class="text-amber-500 italic font-serif">a Buffalo.</span>
+            </h1>
+            <p class="max-w-2xl mx-auto text-base sm:text-lg text-slate-300 font-light leading-relaxed">
+                Handcrafted mattresses with orthopedic support, breathable foam, and natural coir layers — engineered in our own factory and delivered straight to your door.
+            </p>
+            <div class="mt-10 flex flex-col sm:flex-row justify-center items-center gap-4">
+                <button onclick="scrollToProducts()" class="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold px-8 py-4 rounded-xl transition-all duration-300 shadow-xl shadow-amber-500/10 hover:shadow-amber-500/20 flex items-center justify-center gap-2 text-base">
+                    Shop the Collection
+                    <svg class="w-4 h-4 stroke-current" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+                <a href="https://wa.me/919048437561" target="_blank" class="w-full sm:w-auto border border-slate-700 bg-slate-900/40 text-white font-semibold px-8 py-4 rounded-xl transition hover:bg-slate-800/80 hover:border-slate-600 flex items-center justify-center gap-2 text-base backdrop-blur-sm">
+                    <svg class="w-5 h-5 fill-emerald-500" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397 0 11.948 0c3.179.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.902-11.89 11.902-2.01-.001-3.987-.51-5.742-1.477L0 24zm6.154-3.561l.411.244c1.573.932 3.394 1.424 5.26 1.425 5.735 0 10.4-4.646 10.403-10.36.002-2.768-1.077-5.37-3.04-7.336C17.221 2.446 14.61 1.365 11.85 1.365c-5.741 0-10.406 4.649-10.41 10.366-.002 1.834.48 3.627 1.396 5.202l.258.444-1.022 3.735 3.821-1.002z"/></svg>
+                    Chat on WhatsApp
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- PREMIUM TRUST VALUE STRIP -->
+    <section id="featuresStrip" class="bg-slate-900 border-b border-slate-800/60 py-10 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="flex items-center gap-4">
+                    <div class="p-3 bg-amber-500/10 text-amber-500 rounded-2xl border border-amber-500/20">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-white uppercase tracking-wider">25+ Years</h4>
+                        <p class="text-xs text-slate-400">Warranty Protection</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="p-3 bg-amber-500/10 text-amber-500 rounded-2xl border border-amber-500/20">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-white uppercase tracking-wider">Factory Direct</h4>
+                        <p class="text-xs text-slate-400">Uncompromised Quality</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="p-3 bg-amber-500/10 text-amber-500 rounded-2xl border border-amber-500/20">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-white uppercase tracking-wider">All India</h4>
+                        <p class="text-xs text-slate-400">Doorstep Delivery</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="p-3 bg-amber-500/10 text-amber-500 rounded-2xl border border-amber-500/20">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-white uppercase tracking-wider">Instant Order</h4>
+                        <p class="text-xs text-slate-400">Via Secure WhatsApp</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN DISPLAY REGION -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-14">
+        
+        <!-- ================= 1. CUSTOMER CATALOG VIEW ================= -->
+        <section id="catalogView" class="view-section">
+            <div id="productShowcaseAnchor" class="border-b border-slate-800 pb-4 mb-10">
+                <span class="text-xs font-bold uppercase tracking-widest text-amber-500">Premium Showroom</span>
+                <h2 class="text-3xl font-black text-white tracking-tight mt-1">Our Collection</h2>
+            </div>
+            
+            <!-- Dynamic Database Setup Tip (Only shows to visitors when catalog is empty) -->
+            <div id="setupHelpBanner" class="hidden glass-panel rounded-2xl p-6 mb-8 border border-amber-500/20">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div>
+                        <h4 class="text-white font-bold flex items-center gap-2">
+                            <span class="text-amber-500">⚡</span> Setup Demo Data or Connect Database
+                        </h4>
+                        <p class="text-slate-300 text-sm mt-1">You are currently running in mock demo mode. Tap the logo 5 times to open the Admin Portal and enter your Supabase & Cloudinary credentials to publish live mattresses!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Loaded dynamically -->
+            </div>
+        </section>
+
+        <!-- ================= 2. CUSTOMER DETAIL VIEW ================= -->
+        <section id="detailView" class="view-section hidden">
+            <!-- Breadcrumbs back to Shop -->
+            <div class="mb-6">
+                <button onclick="showCatalogView()" class="inline-flex items-center text-xs font-bold uppercase tracking-wider text-slate-400 hover:text-amber-500 transition gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg>
+                    Back to Collection
+                </button>
+            </div>
+            
+            <div class="bg-slate-900 rounded-3xl shadow-2xl border border-slate-800/80 p-6 lg:p-12">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <!-- Left: Interactive Image Slider with Zoom -->
+                    <div>
+                        <div class="zoom-container rounded-2xl border border-slate-800 bg-slate-950 aspect-square flex items-center justify-center relative shadow-inner overflow-hidden" id="zoomBox" onmousemove="zoomIn(event)" onmouseleave="zoomReset()">
+                            <img id="detailMainImg" src="" alt="Product view" class="w-full h-full object-cover">
+                        </div>
+                        <!-- Slider Controls -->
+                        <div class="flex items-center justify-between mt-6 px-2">
+                            <button onclick="prevImage()" class="bg-slate-800 hover:bg-slate-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-1 shadow-lg shadow-slate-950/20">
+                                <span>←</span> Previous
+                            </button>
+                            <span id="imageCounter" class="text-xs font-bold text-slate-400 uppercase tracking-widest">Image 1 of 3</span>
+                            <button onclick="nextImage()" class="bg-slate-800 hover:bg-slate-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-1 shadow-lg shadow-slate-950/20">
+                                Next <span>→</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Right: Product Information & Checkout -->
+                    <div class="flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-widest text-amber-500 bg-amber-500/10 border border-amber-500/20 px-4 py-1.5 rounded-full">Factory Direct Product</span>
+                            <h2 id="detailTitle" class="text-4xl font-black text-white mt-6 tracking-tight leading-tight"></h2>
+                            <div class="text-3xl font-black text-amber-500 mt-3" id="detailPrice"></div>
+                            
+                            <hr class="border-slate-800 my-6">
+                            
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Product Architecture & Design</h4>
+                            <p id="detailDesc" class="text-slate-300 leading-relaxed text-base font-light whitespace-pre-line"></p>
+                            
+                            <!-- Premium Size Selector (like shoe sizes in Amazon) -->
+                            <div class="mt-8 border-t border-slate-800/60 pt-6">
+                                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Select Mattress Size</h4>
+                                <div class="grid grid-cols-3 sm:grid-cols-5 gap-2" id="sizeSelectorGrid">
+                                    <button type="button" onclick="selectSize('Single')" id="sizeBtn_Single" class="size-pill py-2.5 text-center text-xs font-bold rounded-xl border border-slate-800 hover:border-amber-500/50 hover:bg-slate-900 transition-all text-slate-300">Single</button>
+                                    <button type="button" onclick="selectSize('Double')" id="sizeBtn_Double" class="size-pill py-2.5 text-center text-xs font-bold rounded-xl border border-slate-800 hover:border-amber-500/50 hover:bg-slate-900 transition-all text-slate-300">Double</button>
+                                    <button type="button" onclick="selectSize('Queen')" id="sizeBtn_Queen" class="size-pill py-2.5 text-center text-xs font-bold rounded-xl border border-slate-800 hover:border-amber-500/50 hover:bg-slate-900 transition-all text-slate-300">Queen</button>
+                                    <button type="button" onclick="selectSize('King')" id="sizeBtn_King" class="size-pill py-2.5 text-center text-xs font-bold rounded-xl border border-slate-800 hover:border-amber-500/50 hover:bg-slate-900 transition-all text-slate-300">King</button>
+                                    <button type="button" onclick="selectSize('Custom')" id="sizeBtn_Custom" class="size-pill py-2.5 text-center text-xs font-bold rounded-xl border border-slate-800 hover:border-amber-500/50 hover:bg-slate-900 transition-all text-slate-300">Custom</button>
+                                </div>
+                                
+                                <!-- Custom Dimensions Inputs (shown only when Custom is chosen) -->
+                                <div id="customSizeInputs" class="mt-4 p-4 bg-slate-950 rounded-2xl border border-slate-850 hidden">
+                                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Enter Custom Dimensions</label>
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <span class="text-[9px] text-slate-500 block mb-1 uppercase font-bold tracking-wider">Length</span>
+                                            <input type="text" id="customLength" placeholder="e.g. 75 inches" oninput="updateCustomSizeValue()" class="w-full bg-slate-900 rounded-xl border border-slate-800 p-2.5 text-xs font-semibold text-white focus:border-amber-500 focus:ring-1 focus:ring-amber-500/20 outline-none transition">
+                                        </div>
+                                        <div>
+                                            <span class="text-[9px] text-slate-500 block mb-1 uppercase font-bold tracking-wider">Width</span>
+                                            <input type="text" id="customWidth" placeholder="e.g. 64 inches" oninput="updateCustomSizeValue()" class="w-full bg-slate-900 rounded-xl border border-slate-800 p-2.5 text-xs font-semibold text-white focus:border-amber-500 focus:ring-1 focus:ring-amber-500/20 outline-none transition">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-8 pt-6 border-t border-slate-800/60">
+                            <!-- WhatsApp checkout button -->
+                            <a id="whatsappOrderBtn" href="#" target="_blank" class="w-full text-center bg-emerald-600 hover:bg-emerald-500 text-white font-black py-4 px-6 rounded-2xl transition-all duration-300 shadow-xl shadow-emerald-950/50 flex items-center justify-center gap-3 text-lg">
+                                <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397 0 11.948 0c3.179.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.902-11.89 11.902-2.01-.001-3.987-.51-5.742-1.477L0 24zm6.154-3.561l.411.244c1.573.932 3.394 1.424 5.26 1.425 5.735 0 10.4-4.646 10.403-10.36.002-2.768-1.077-5.37-3.04-7.336C17.221 2.446 14.61 1.365 11.85 1.365c-5.741 0-10.406 4.649-10.41 10.366-.002 1.834.48 3.627 1.396 5.202l.258.444-1.022 3.735 3.821-1.002z"/></svg>
+                                Confirm Order via WhatsApp
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= 3. ADMIN CONTROL DASHBOARD ================= -->
+        <section id="adminView" class="view-section hidden py-6">
+            <!-- Admin Navigation Panel (Shop, Contact Us, Admin options) -->
+            <nav class="bg-slate-900 border border-slate-800 p-4 rounded-2xl mb-8 flex flex-wrap justify-between items-center gap-4 shadow-xl">
+                <div class="flex gap-4">
+                    <button onclick="showCatalogView()" class="text-sm font-bold text-slate-300 hover:text-amber-500 transition">Shop</button>
+                    <button onclick="scrollToContact()" class="text-sm font-bold text-slate-300 hover:text-amber-500 transition">Contact Us</button>
+                    <button onclick="showSection('adminView')" class="text-sm font-bold text-amber-500">Admin Panel</button>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="text-xs text-slate-400 font-mono hidden sm:inline">Credentials Authenticated</span>
+                    <button onclick="logoutAdmin()" class="bg-red-950/40 hover:bg-red-900/40 text-red-400 border border-red-900/40 px-4 py-2 rounded-xl text-xs font-bold transition">Logout</button>
+                </div>
+            </nav>
+
+            <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+                <!-- Column 1 & 2: Form & Database Configuration -->
+                <div class="xl:col-span-2 space-y-8">
+                    <!-- Tab Selector -->
+                    <div class="flex border-b border-slate-800 bg-slate-900 rounded-xl p-1 shadow-inner">
+                        <button id="tabBtnCatalog" onclick="switchAdminTab('catalog')" class="flex-1 text-center py-2.5 text-sm font-bold rounded-lg transition-all text-amber-500 bg-slate-950">Mattress Manager</button>
+                        <button id="tabBtnApi" onclick="switchAdminTab('api')" class="flex-1 text-center py-2.5 text-sm font-bold rounded-lg transition-all text-slate-400 hover:text-white">Connection Keys (Supabase/Cloudinary)</button>
+                    </div>
+
+                    <!-- Tab Content: Mattress Entry Form -->
+                    <div id="adminTabCatalog" class="bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-xl border border-slate-800/80">
+                        <h3 id="formTitle" class="text-xl font-bold text-white mb-6 border-b pb-3 border-slate-850">Create New Mattress Entry</h3>
+                        
+                        <form id="productForm" onsubmit="handleFormSubmit(event)">
+                            <input type="hidden" id="productId">
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
+                                <div class="sm:col-span-2">
+                                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Product Title</label>
+                                    <input type="text" id="productTitle" required placeholder="e.g., Signature Luxury Ortho Mattress" class="w-full bg-slate-950 rounded-xl border-slate-800 p-3.5 border text-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none text-sm font-semibold transition">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Price (INR)</label>
+                                    <input type="text" id="productPrice" required placeholder="e.g., 19,999/-" class="w-full bg-slate-950 rounded-xl border-slate-800 p-3.5 border text-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none text-sm font-semibold transition">
+                                </div>
+                            </div>
+                            
+                            <!-- Premium Gallery Image Upload Slots (Up to 3 Photos) -->
+                            <div class="mb-6">
+                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Mattress Photos (Upload from Gallery, Cropped 1:1)</label>
+                                <div class="grid grid-cols-3 gap-4">
+                                    
+                                    <!-- Slot 1 -->
+                                    <div class="relative group aspect-square bg-slate-950 rounded-2xl border-2 border-dashed border-slate-855 hover:border-amber-500/60 flex flex-col items-center justify-center cursor-pointer overflow-hidden transition" id="uploadSlot1" onclick="triggerFileInput(1)">
+                                        <input type="file" id="productFile1" accept="image/*" class="hidden" onchange="openCropModal(1)">
+                                        <div class="text-center p-2 text-slate-500 group-hover:text-slate-300 transition" id="uploadText1">
+                                            <svg class="w-7 h-7 mx-auto mb-1" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
+                                            <span class="text-[10px] font-bold tracking-wider uppercase block">Primary</span>
+                                        </div>
+                                        <img id="imgPreview1" src="" class="absolute inset-0 w-full h-full object-cover hidden">
+                                        <!-- Loading Spinner -->
+                                        <div id="uploadSpinner1" class="absolute inset-0 bg-slate-950/80 flex items-center justify-center hidden">
+                                            <svg class="animate-spin h-6 w-6 text-amber-500" fill="none" viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                            </svg>
+                                        </div>
+                                        <!-- Delete Slot Button -->
+                                        <button type="button" onclick="deleteSlotImage(event, 1)" class="absolute top-2 right-2 bg-red-950/80 border border-red-800/80 text-red-400 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition hidden" id="deleteBtnSlot1">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                        </button>
+                                    </div>
+
+                                    <!-- Slot 2 -->
+                                    <div class="relative group aspect-square bg-slate-950 rounded-2xl border-2 border-dashed border-slate-855 hover:border-amber-500/60 flex flex-col items-center justify-center cursor-pointer overflow-hidden transition" id="uploadSlot2" onclick="triggerFileInput(2)">
+                                        <input type="file" id="productFile2" accept="image/*" class="hidden" onchange="openCropModal(2)">
+                                        <div class="text-center p-2 text-slate-500 group-hover:text-slate-300 transition" id="uploadText2">
+                                            <svg class="w-7 h-7 mx-auto mb-1" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
+                                            <span class="text-[10px] font-bold tracking-wider uppercase block">Slide 2</span>
+                                        </div>
+                                        <img id="imgPreview2" src="" class="absolute inset-0 w-full h-full object-cover hidden">
+                                        <!-- Loading Spinner -->
+                                        <div id="uploadSpinner2" class="absolute inset-0 bg-slate-950/80 flex items-center justify-center hidden">
+                                            <svg class="animate-spin h-6 w-6 text-amber-500" fill="none" viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                            </svg>
+                                        </div>
+                                        <button type="button" onclick="deleteSlotImage(event, 2)" class="absolute top-2 right-2 bg-red-950/80 border border-red-800/80 text-red-400 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition hidden" id="deleteBtnSlot2">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                        </button>
+                                    </div>
+
+                                    <!-- Slot 3 -->
+                                    <div class="relative group aspect-square bg-slate-950 rounded-2xl border-2 border-dashed border-slate-855 hover:border-amber-500/60 flex flex-col items-center justify-center cursor-pointer overflow-hidden transition" id="uploadSlot3" onclick="triggerFileInput(3)">
+                                        <input type="file" id="productFile3" accept="image/*" class="hidden" onchange="openCropModal(3)">
+                                        <div class="text-center p-2 text-slate-500 group-hover:text-slate-300 transition" id="uploadText3">
+                                            <svg class="w-7 h-7 mx-auto mb-1" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
+                                            <span class="text-[10px] font-bold tracking-wider uppercase block">Slide 3</span>
+                                        </div>
+                                        <img id="imgPreview3" src="" class="absolute inset-0 w-full h-full object-cover hidden">
+                                        <!-- Loading Spinner -->
+                                        <div id="uploadSpinner3" class="absolute inset-0 bg-slate-950/80 flex items-center justify-center hidden">
+                                            <svg class="animate-spin h-6 w-6 text-amber-500" fill="none" viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                            </svg>
+                                        </div>
+                                        <button type="button" onclick="deleteSlotImage(event, 3)" class="absolute top-2 right-2 bg-red-950/80 border border-red-800/80 text-red-400 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition hidden" id="deleteBtnSlot3">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                        </button>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Description</label>
+                                <textarea id="productDesc" rows="5" required placeholder="Outline core coir, memory foam layers, and orthopaedic structural properties..." class="w-full bg-slate-950 rounded-xl border-slate-800 p-4 border text-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none text-sm transition"></textarea>
+                            </div>
+
+                            <div class="flex gap-4">
+                                <button type="submit" id="submitBtn" class="bg-amber-500 hover:bg-amber-600 text-slate-950 px-6 py-3.5 rounded-xl font-black text-sm tracking-wide shadow-lg shadow-amber-500/10 hover:shadow-amber-500/20 transition">Save Product</button>
+                                <button type="button" onclick="resetForm()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-6 py-3.5 rounded-xl font-bold text-sm tracking-wide transition">Clear</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Tab Content: API/Database credentials setting -->
+                    <div id="adminTabApi" class="bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-xl border border-slate-800/80 hidden">
+                        <h3 class="text-xl font-bold text-white mb-2 border-b pb-3 border-slate-850">API & Database Connection</h3>
+                        <p class="text-xs text-slate-400 mb-6">Enter your API keys below. They are saved directly inside your browser storage and are never hardcoded or sent to others.</p>
+                        
+                        <div class="space-y-6">
+                            <div class="p-4 bg-amber-500/5 rounded-2xl border border-amber-500/20 text-xs text-amber-500 leading-relaxed">
+                                <strong>Setup Note:</strong> You can host your database on <a href="https://supabase.com" target="_blank" class="underline font-bold">Supabase</a> and your image gallery on <a href="https://cloudinary.com" target="_blank" class="underline font-bold">Cloudinary</a>. Once credentials are saved, uploads will automatically sync to everyone!
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Supabase Project URL</label>
+                                    <input type="text" id="dbUrl" placeholder="https://xxxx.supabase.co" class="w-full bg-slate-950 rounded-xl border-slate-800 p-3 border text-slate-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none text-xs font-mono transition">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Supabase Anon Key</label>
+                                    <input type="password" id="dbKey" placeholder="eyJhbGciOi..." class="w-full bg-slate-950 rounded-xl border-slate-800 p-3 border text-slate-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none text-xs font-mono transition">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Cloudinary Cloud Name</label>
+                                    <input type="text" id="clName" placeholder="e.g. dmxxx222" class="w-full bg-slate-950 rounded-xl border-slate-800 p-3 border text-slate-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none text-xs font-mono transition">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Cloudinary Upload Preset (Unsigned)</label>
+                                    <input type="text" id="clPreset" placeholder="e.g. g1_unsigned_preset" class="w-full bg-slate-950 rounded-xl border-slate-800 p-3 border text-slate-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none text-xs font-mono transition">
+                                </div>
+                            </div>
+
+                            <div class="pt-4 border-t border-slate-850">
+                                <button onclick="saveApiCredentials()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 px-6 py-3 rounded-xl font-black text-sm tracking-wide shadow-md transition">Save & Apply API Keys</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Column 3: Active List -->
+                <div class="bg-slate-900 p-6 rounded-3xl shadow-xl border border-slate-800/80 flex flex-col max-h-[800px]">
+                    <div class="border-b border-slate-850 pb-4 mb-4">
+                        <h3 class="text-lg font-bold text-white">Active Inventory</h3>
+                        <p class="text-xs text-slate-400 mt-1">Listed products currently visible on shop catalog.</p>
+                    </div>
+
+                    <!-- Scrollable list of items -->
+                    <div id="adminInventoryList" class="flex-grow overflow-y-auto space-y-4 pr-1">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ================= 4. AUTHENTICATION PROTECTION MODAL ================= -->
+    <div id="authModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center hidden opacity-0 transition-all duration-300">
+        <div class="bg-slate-900 w-full max-w-md p-8 rounded-3xl shadow-2xl border border-slate-800 relative mx-4 transform scale-95 transition-transform duration-300">
+            <h3 class="text-2xl font-black text-white mb-2">Staff Verification</h3>
+            <p class="text-sm text-slate-400 mb-6">Unauthorized access restricted. Authenticate to edit catalog database.</p>
+            <form onsubmit="verifyAdminCredentials(event)">
+                <div class="mb-4">
+                    <label class="block text-xs font-bold text-slate-400 tracking-wider uppercase mb-2">User ID</label>
+                    <input type="text" id="authUsername" required class="w-full bg-slate-950 rounded-xl border p-3 border-slate-850 text-white outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-sm font-semibold transition">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-xs font-bold text-slate-400 tracking-wider uppercase mb-2">Access Security Code</label>
+                    <input type="password" id="authPassword" required class="w-full bg-slate-950 rounded-xl border p-3 border-slate-855 text-white outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-sm font-semibold transition">
+                </div>
+                <div class="flex justify-end gap-3">
+                    <button type="button" onclick="closeAdminModal()" class="px-4 py-2 text-sm font-bold text-slate-400 hover:text-slate-200 transition">Cancel</button>
+                    <button type="submit" class="bg-amber-500 hover:bg-amber-600 text-slate-950 px-6 py-2.5 rounded-xl text-sm font-black transition shadow-lg shadow-amber-500/10">Authenticate</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= 5. DYNAMIC 1:1 FIXED CROP MODAL WORKSPACE ================= -->
+    <div id="cropModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex flex-col items-center justify-center hidden p-4">
+        <div class="bg-slate-900 max-w-lg w-full rounded-3xl overflow-hidden shadow-2xl border border-slate-800 flex flex-col">
+            <div class="p-5 border-b border-slate-800 flex justify-between items-center bg-slate-950">
+                <h4 class="text-sm font-bold text-amber-500 uppercase tracking-wider">Perfect 1:1 Crop Engine</h4>
+                <span class="text-xs text-slate-400 font-mono">Locks Frame Dimension</span>
+            </div>
+            <div class="p-6 bg-slate-950 flex justify-center items-center h-80 overflow-hidden">
+                <img id="croppingWorkspaceImage" class="max-w-full max-h-full block">
+            </div>
+            <div class="p-5 border-t border-slate-800 flex justify-end gap-3 bg-slate-900">
+                <button type="button" onclick="cancelCrop()" class="px-5 py-2.5 text-xs font-bold text-slate-400 hover:text-slate-200 transition">Cancel</button>
+                <button type="button" onclick="executeCropAndSave()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-black px-6 py-2.5 rounded-xl text-xs transition shadow-lg shadow-amber-500/10">Crop & Fit Perfectly</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Layout Footer -->
+    <footer class="bg-slate-950 border-t border-slate-900 mt-auto py-16 px-6 text-slate-400 relative">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div>
+                <h3 class="text-amber-500 font-black uppercase tracking-wider mb-6 text-sm">Factory Address</h3>
+                <p class="font-bold text-white text-base mb-2">G-ONE Mattress</p>
+                <p class="text-slate-400 text-sm mb-1 leading-relaxed">Premium Mattress Manufacturing Factory</p>
+                <p class="text-slate-400 text-sm mb-1 leading-relaxed">Co-partner: Morus Pvt Ltd.</p>
+                <p class="text-slate-400 text-sm mb-1 leading-relaxed">Kizhisseri · Kondotty</p>
+                <p class="text-slate-400 text-sm mb-1 leading-relaxed">Malappuram · Kerala</p>
+                <p class="text-slate-400 text-sm mb-6 leading-relaxed">PIN: 673641</p>
+                <p class="flex items-center gap-2 text-white font-bold text-sm"><span class="text-amber-500">📞</span> +91 90484 37561</p>
+            </div>
+
+            <div>
+                <h3 class="text-amber-500 font-black uppercase tracking-wider mb-6 text-sm">Contact Channels</h3>
+                <div class="space-y-4 mb-10 text-sm">
+                    <p class="flex items-center gap-2"><span class="text-amber-500">💬</span> WhatsApp: +91 90484 37561</p>
+                    <p class="flex items-center gap-2"><span class="text-amber-500">☎️</span> +91 90484 37561</p>
+                    <p class="flex items-center gap-2"><span class="text-amber-500">📍</span> All India Doorstep Delivery</p>
+                </div>
+
+                <h3 class="text-amber-500 font-black uppercase tracking-wider mb-6 text-sm">Why G-ONE</h3>
+                <ul class="space-y-3 text-slate-400 text-sm">
+                    <li class="flex items-center gap-2"><span class="text-amber-500">✓</span> 25+ Years Manufacturer Warranty</li>
+                    <li class="flex items-center gap-2"><span class="text-amber-500">✓</span> 100-Night In-Home Comfort Trial</li>
+                    <li class="flex items-center gap-2"><span class="text-amber-500">✓</span> Hand-stitched, factory-direct coir & foam</li>
+                    <li class="flex items-center gap-2"><span class="text-amber-500">✓</span> All India Secure Delivery Pipeline</li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto border-t border-slate-900 mt-12 pt-8 text-center text-[10px] font-bold text-slate-600 tracking-widest uppercase">
+            &copy; 2026 G-one Mattress. Direct Delivery Pipeline.
+        </div>
+    </footer>
+
+    <!-- Supabase JS Client via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Cropper JS Script Injection Layer -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+
+    <script>
+        const WHATSAPP_NUMBER = "919048437561"; 
+        const ADMIN_USER = "admin";
+        const ADMIN_PASS = "G1mattress";
+
+        const placeholderImg = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'><rect width='300' height='300' fill='%230f172a'/><text x='50%27 y='50%27 font-family='sans-serif' font-size='14' fill='%23475569' text-anchor='middle' dy='.3em'>No Photo Loaded</text></svg>";
+
+        // Preloaded fallback items if Database connection is not yet configured
+        const fallbackCollection = [
+            {
+                id: "101",
+                title: "Signature Luxury G-ONE Roll Pack Mattress",
+                price: "19,999/-",
+                desc: "Compact roll-pack delivery layout engineered with multi-layer high-resilience memory foam.\n\nDesigned for complete lumbar alignment, edge-to-edge support configuration, and zero partner motion transfer. Includes high-durability cotton cover knit.",
+                imgs: ["https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&q=80&w=600", "", ""]
+            }
+        ];
+
+        let products = [];
+        let uploadedImagesBase64 = ["", "", ""];
+        let activeProduct = null;
+        let activeImgIndex = 0;
+        let isAdminLoggedIn = false;
+        let activeAdminTab = "catalog";
+
+        // Cropper reference trackers
+        let activeCropperInstance = null;
+        let activeInputSlotNumber = null;
+
+        // Supabase Client Reference
+        let supabaseClient = null;
+
+        // Secret click trigger variables
+        let logoClickCount = 0;
+        let logoClickTimer = null;
+
+        // Initialize Supabase & Fetch Products
+        function initSupabase() {
+            const dbUrl = localStorage.getItem('g1_db_url');
+            const dbKey = localStorage.getItem('g1_db_key');
+            if (dbUrl && dbKey) {
+                try {
+                    supabaseClient = supabase.createClient(dbUrl, dbKey);
+                    console.log("Supabase Connection Initiated.");
+                } catch(e) {
+                    console.error("Supabase initiation failed", e);
+                }
+            } else {
+                console.log("Running in Local Demo Mode. No credentials configured.");
+            }
+        }
+
+        async function fetchProducts() {
+            if (supabaseClient) {
+                try {
+                    const { data, error } = await supabaseClient
+                        .from('products')
+                        .select('*')
+                        .order('id', { ascending: false });
+
+                    if (error) throw error;
+                    if (data && data.length > 0) {
+                        products = data.map(item => ({
+                            id: item.id.toString(),
+                            title: item.title,
+                            price: item.price,
+                            desc: item.description,
+                            imgs: [item.img1 || "", item.img2 || "", item.img3 || ""]
+                        }));
+                        document.getElementById('setupHelpBanner').classList.add('hidden');
+                        return;
+                    }
+                } catch(e) {
+                    console.error("Database read failed, showing fallback data.", e);
+                }
+            }
+            
+            // Fallback load
+            products = JSON.parse(localStorage.getItem('g1_inventory')) || fallbackCollection;
+            if (!localStorage.getItem('g1_inventory')) {
+                localStorage.setItem('g1_inventory', JSON.stringify(products));
+            }
+            document.getElementById('setupHelpBanner').classList.remove('hidden');
+        }
+
+        // Secret Trigger handler for opening the Admin Modal
+        function handleLogoClick() {
+            logoClickCount++;
+            clearTimeout(logoClickTimer);
+            logoClickTimer = setTimeout(() => {
+                logoClickCount = 0;
+            }, 3000); // 3 seconds timeout to enter the code
+
+            if (logoClickCount >= 5) {
+                logoClickCount = 0;
+                openAdminModal();
+            }
+        }
+
+        // Check for URL hash code entry
+        function checkUrlHash() {
+            if (window.location.hash === '#admin') {
+                openAdminModal();
+                // Strip the hash so the page stays clean
+                history.replaceState("", document.title, window.location.pathname + window.location.search);
+            }
+        }
+
+        window.addEventListener('hashchange', checkUrlHash);
+        window.addEventListener('DOMContentLoaded', () => {
+            initSupabase();
+            checkUrlHash();
+            refreshShowroom();
+        });
+
+        // Trigger loading of grid lists
+        async function refreshShowroom() {
+            await fetchProducts();
+            renderCustomerGrid();
+        }
+
+        function scrollToProducts() {
+            const anchor = document.getElementById('productShowcaseAnchor');
+            if (anchor) anchor.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function triggerFileInput(slotNumber) {
+            // Only trigger file select if no image exists in the slot
+            if (!uploadedImagesBase64[slotNumber - 1]) {
+                document.getElementById(`productFile${slotNumber}`).click();
+            }
+        }
+
+        // OPEN CROP MODAL INTERACTION
+        function openCropModal(slotNumber) {
+            const inputElement = document.getElementById(`productFile${slotNumber}`);
+            const targetFile = inputElement.files[0];
+            if (!targetFile) return;
+
+            activeInputSlotNumber = slotNumber;
+            const fileReaderRef = new FileReader();
+            
+            fileReaderRef.onload = function(event) {
+                const workspaceImage = document.getElementById('croppingWorkspaceImage');
+                workspaceImage.src = event.target.result;
+                
+                // Show modal overlay wrapper
+                document.getElementById('cropModal').classList.remove('hidden');
+                
+                // Initialize Cropper tool locked tightly to a 1:1 Aspect Square Ratio
+                if (activeCropperInstance) activeCropperInstance.destroy();
+                activeCropperInstance = new Cropper(workspaceImage, {
+                    aspectRatio: 1,
+                    viewMode: 1,
+                    background: false,
+                    autoCropArea: 1
+                });
+            };
+            fileReaderRef.readAsDataURL(targetFile);
+        }
+
+        function cancelCrop() {
+            document.getElementById('cropModal').classList.add('hidden');
+            document.getElementById(`productFile${activeInputSlotNumber}`).value = "";
+            if (activeCropperInstance) activeCropperInstance.destroy();
+        }
+
+        // UPLOAD TO CLOUDINARY LOGIC
+        async function uploadImageToCloudinary(base64Data) {
+            const clName = localStorage.getItem('g1_cl_name');
+            const clPreset = localStorage.getItem('g1_cl_preset');
+
+            if (!clName || !clPreset) {
+                // If keys are missing, return base64 to save directly in Supabase or localstorage
+                return base64Data;
+            }
+
+            const formData = new FormData();
+            formData.append("file", base64Data);
+            formData.append("upload_preset", clPreset);
+
+            try {
+                const response = await fetch(`https://api.cloudinary.com/v1_1/${clName}/image/upload`, {
+                    method: "POST",
+                    body: formData
+                });
+                if (!response.ok) throw new Error("Cloudinary upload failed.");
+                const data = await response.json();
+                return data.secure_url;
+            } catch(e) {
+                console.error("Cloudinary error: ", e);
+                alert("Cloudinary Upload failed. Saving image locally as fallback.");
+                return base64Data;
+            }
+        }
+
+        async function executeCropAndSave() {
+            if (!activeCropperInstance) return;
+
+            // Generate high quality canvas dimensions to ensure clear resolution
+            const finalCanvas = activeCropperInstance.getCroppedCanvas({
+                width: 800,
+                height: 800
+            });
+
+            const forcedSquareBase64 = finalCanvas.toDataURL('image/jpeg', 0.92);
+            
+            // Close cropping window
+            document.getElementById('cropModal').classList.add('hidden');
+            activeCropperInstance.destroy();
+
+            // Set loading spinner state active
+            const spinner = document.getElementById(`uploadSpinner${activeInputSlotNumber}`);
+            spinner.classList.remove('hidden');
+
+            // Upload cropped file directly to Cloudinary
+            const finalImageUrl = await uploadImageToCloudinary(forcedSquareBase64);
+            uploadedImagesBase64[activeInputSlotNumber - 1] = finalImageUrl;
+
+            // Set previews
+            spinner.classList.add('hidden');
+            const previewImg = document.getElementById(`imgPreview${activeInputSlotNumber}`);
+            previewImg.src = finalImageUrl;
+            previewImg.classList.remove('hidden');
+
+            document.getElementById(`uploadText${activeInputSlotNumber}`).classList.add('hidden');
+            document.getElementById(`deleteBtnSlot${activeInputSlotNumber}`).classList.remove('hidden');
+        }
+
+        function deleteSlotImage(event, slotNumber) {
+            if (event) event.stopPropagation(); // Avoid triggering click select file
+            
+            uploadedImagesBase64[slotNumber - 1] = "";
+            document.getElementById(`productFile${slotNumber}`).value = "";
+            
+            const previewImg = document.getElementById(`imgPreview${slotNumber}`);
+            previewImg.src = "";
+            previewImg.classList.add('hidden');
+
+            document.getElementById(`uploadText${slotNumber}`).classList.remove('hidden');
+            document.getElementById(`deleteBtnSlot${slotNumber}`).classList.add('hidden');
+        }
+
+        function openAdminModal() {
+            if (isAdminLoggedIn) {
+                showSection('adminView');
+                renderAdminPanelData();
+                return;
+            }
+            const modal = document.getElementById('authModal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modal.querySelector('div').classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeAdminModal() {
+            const modal = document.getElementById('authModal');
+            modal.classList.add('opacity-0');
+            modal.querySelector('div').classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        function verifyAdminCredentials(e) {
+            e.preventDefault();
+            const u = document.getElementById('authUsername').value;
+            const p = document.getElementById('authPassword').value;
+
+            if (u === ADMIN_USER && p === ADMIN_PASS) {
+                isAdminLoggedIn = true;
+                closeAdminModal();
+                showSection('adminView');
+                renderAdminPanelData();
+                document.getElementById('authUsername').value = "";
+                document.getElementById('authPassword').value = "";
+            } else {
+                alert("Security Credentials Incorrect. Access Disallowed.");
+            }
+        }
+
+        function logoutAdmin() {
+            isAdminLoggedIn = false;
+            showCatalogView();
+            console.log("Logged out successfully");
+        }
+
+        function showSection(targetId) {
+            document.querySelectorAll('.view-section').forEach(sec => sec.classList.add('hidden'));
+            document.getElementById(targetId).classList.remove('hidden');
+            
+            const heroSec = document.getElementById('mainHeroSection');
+            const stripSec = document.getElementById('featuresStrip');
+
+            if (targetId === 'catalogView') {
+                heroSec.classList.remove('hidden');
+                stripSec.classList.remove('hidden');
+            } else {
+                heroSec.classList.add('hidden');
+                stripSec.classList.add('hidden');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showCatalogView() {
+            showSection('catalogView');
+            refreshShowroom();
+        }
+
+        let selectedSize = "Queen";
+
+        function selectSize(size) {
+            selectedSize = size;
+            
+            // Highlight selected pill
+            document.querySelectorAll('.size-pill').forEach(btn => {
+                btn.className = "size-pill py-2.5 text-center text-xs font-bold rounded-xl border border-slate-800 hover:border-amber-500/50 hover:bg-slate-900 transition-all text-slate-300";
+            });
+            
+            const activeBtn = document.getElementById(`sizeBtn_${size}`);
+            if (activeBtn) {
+                activeBtn.className = "size-pill py-2.5 text-center text-xs font-bold rounded-xl border border-amber-500 bg-amber-500/10 text-amber-500 transition-all";
+            }
+
+            // Show/Hide custom inputs
+            const customDiv = document.getElementById('customSizeInputs');
+            if (size === 'Custom') {
+                customDiv.classList.remove('hidden');
+            } else {
+                customDiv.classList.add('hidden');
+            }
+
+            updateWhatsAppLink();
+        }
+
+        function updateCustomSizeValue() {
+            updateWhatsAppLink();
+        }
+
+        function updateWhatsAppLink() {
+            if (!activeProduct) return;
+
+            let sizeText = selectedSize;
+            if (selectedSize === 'Custom') {
+                const len = document.getElementById('customLength').value.trim();
+                const wid = document.getElementById('customWidth').value.trim();
+                if (len || wid) {
+                    sizeText = `Custom (${len || 'N/A'} L x ${wid || 'N/A'} W)`;
+                } else {
+                    sizeText = `Custom (Dimensions pending)`;
+                }
+            }
+
+            const messageText = `Hello G-one Mattress!\n\nI checked your luxury website catalog and would like to confirm my order:\n\n• Product: ${activeProduct.title}\n• Size: ${sizeText}\n• Price: ₹${activeProduct.price}\n• Product ID: ${activeProduct.id}\n\nPlease confirm availability and logistics parameters for delivery.`;
+            
+            document.getElementById('whatsappOrderBtn').href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(messageText)}`;
+        }
+
+        function openProductDetails(id) {
+            activeProduct = products.find(p => p.id === id);
+            if (!activeProduct) return;
+
+            activeImgIndex = 0;
+            document.getElementById('detailTitle').innerText = activeProduct.title;
+            document.getElementById('detailPrice').innerText = `₹${activeProduct.price}`;
+            document.getElementById('detailDesc').innerText = activeProduct.desc;
+            
+            // Reset sizing selection to default (Queen)
+            document.getElementById('customLength').value = "";
+            document.getElementById('customWidth').value = "";
+            selectSize("Queen");
+            
+            updateCarouselImage();
+            showSection('detailView');
+        }
+
+        function getValidImages(product) {
+            let validImgs = product.imgs.filter(url => url && url.trim() !== "");
+            if (validImgs.length === 0) validImgs = [placeholderImg];
+            return validImgs;
+        }
+
+        function updateCarouselImage() {
+            const imgs = getValidImages(activeProduct);
+            document.getElementById('detailMainImg').src = imgs[activeImgIndex];
+            document.getElementById('imageCounter').innerText = `Image ${activeImgIndex + 1} of ${imgs.length}`;
+        }
+
+        function nextImage() {
+            const imgs = getValidImages(activeProduct);
+            activeImgIndex = (activeImgIndex + 1) % imgs.length;
+            updateCarouselImage();
+        }
+
+        function prevImage() {
+            const imgs = getValidImages(activeProduct);
+            activeImgIndex = (activeImgIndex - 1 + imgs.length) % imgs.length;
+            updateCarouselImage();
+        }
+
+        // Zoom details
+        function zoomIn(e) {
+            const box = document.getElementById('zoomBox');
+            const img = document.getElementById('detailMainImg');
+            const rect = box.getBoundingClientRect();
+            
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 105; // slightly offset for premium feel
+            
+            img.style.transformOrigin = `${x}% ${y}%`;
+        }
+
+        function zoomReset() {
+            const img = document.getElementById('detailMainImg');
+            img.style.transformOrigin = `center center`;
+        }
+
+        function renderCustomerGrid() {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = "";
+
+            if (products.length === 0) {
+                grid.innerHTML = `<p class="text-slate-500 col-span-full text-center py-16 font-semibold">No luxury mattresses listed in the showroom catalog currently.</p>`;
+                return;
+            }
+
+            products.forEach(p => {
+                const primaryImg = p.imgs[0] || placeholderImg;
+                grid.innerHTML += `
+                    <div onclick="openProductDetails('${p.id}')" class="bg-slate-900 rounded-3xl shadow-xl hover:shadow-amber-500/5 hover:-translate-y-1.5 border border-slate-800/80 overflow-hidden cursor-pointer flex flex-col group transition-all duration-300">
+                        <div class="aspect-square bg-slate-950 overflow-hidden relative flex items-center justify-center">
+                            <img src="${primaryImg}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            <div class="absolute inset-0 bg-slate-950/10 group-hover:bg-transparent transition"></div>
+                        </div>
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-lg font-bold text-white mb-2 group-hover:text-amber-500 transition line-clamp-2 leading-tight">${p.title}</h3>
+                            <div class="text-amber-500 font-black mb-3 text-xl">₹${p.price}</div>
+                            <p class="text-slate-400 text-xs line-clamp-2 mb-6 flex-grow leading-relaxed font-light">${p.desc}</p>
+                            <span class="text-xs font-bold text-amber-500 inline-flex items-center gap-1.5 uppercase tracking-wider">
+                                View Specs & Buy
+                                <svg class="w-3.5 h-3.5 transform group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
+                            </span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Render admin data list and input values
+        function renderAdminPanelData() {
+            renderAdminInventoryList();
+            
+            // Load credentials input values
+            document.getElementById('dbUrl').value = localStorage.getItem('g1_db_url') || "";
+            document.getElementById('dbKey').value = localStorage.getItem('g1_db_key') || "";
+            document.getElementById('clName').value = localStorage.getItem('g1_cl_name') || "";
+            document.getElementById('clPreset').value = localStorage.getItem('g1_cl_preset') || "";
+        }
+
+        function renderAdminInventoryList() {
+            const listContainer = document.getElementById('adminInventoryList');
+            listContainer.innerHTML = "";
+
+            if (products.length === 0) {
+                listContainer.innerHTML = `<p class="text-slate-500 text-center py-10 font-bold text-sm">No items in inventory.</p>`;
+                return;
+            }
+
+            products.forEach(p => {
+                const imgThumb = p.imgs[0] || placeholderImg;
+                listContainer.innerHTML += `
+                    <div class="bg-slate-955 border border-slate-850 p-4 rounded-2xl flex items-center justify-between shadow-md hover:border-slate-800 transition">
+                        <div class="flex items-center gap-4 overflow-hidden">
+                            <img class="h-12 w-12 rounded-xl object-cover flex-shrink-0 border border-slate-800" src="${imgThumb}">
+                            <div class="overflow-hidden">
+                                <h4 class="text-sm font-bold text-white truncate max-w-[140px]">${p.title}</h4>
+                                <p class="text-xs text-amber-500 font-extrabold mt-1">₹${p.price}</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2 ml-2">
+                            <button onclick="editProduct('${p.id}')" class="bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 border border-indigo-500/10 px-3 py-1.5 rounded-xl text-xs font-bold transition">Modify</button>
+                            <button onclick="deleteProduct('${p.id}')" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/10 px-3 py-1.5 rounded-xl text-xs font-bold transition">Delete</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function switchAdminTab(tabName) {
+            activeAdminTab = tabName;
+            
+            const tabCatalog = document.getElementById('adminTabCatalog');
+            const tabApi = document.getElementById('adminTabApi');
+            const btnCatalog = document.getElementById('tabBtnCatalog');
+            const btnApi = document.getElementById('tabBtnApi');
+
+            if (tabName === 'catalog') {
+                tabCatalog.classList.remove('hidden');
+                tabApi.classList.add('hidden');
+                btnCatalog.className = "flex-1 text-center py-2.5 text-sm font-bold rounded-lg transition-all text-amber-500 bg-slate-950";
+                btnApi.className = "flex-1 text-center py-2.5 text-sm font-bold rounded-lg transition-all text-slate-400 hover:text-white";
+            } else {
+                tabCatalog.classList.add('hidden');
+                tabApi.classList.remove('hidden');
+                btnCatalog.className = "flex-1 text-center py-2.5 text-sm font-bold rounded-lg transition-all text-slate-400 hover:text-white";
+                btnApi.className = "flex-1 text-center py-2.5 text-sm font-bold rounded-lg transition-all text-amber-500 bg-slate-950";
+            }
+        }
+
+        function saveApiCredentials() {
+            const dbUrl = document.getElementById('dbUrl').value.trim();
+            const dbKey = document.getElementById('dbKey').value.trim();
+            const clName = document.getElementById('clName').value.trim();
+            const clPreset = document.getElementById('clPreset').value.trim();
+
+            localStorage.setItem('g1_db_url', dbUrl);
+            localStorage.setItem('g1_db_key', dbKey);
+            localStorage.setItem('g1_cl_name', clName);
+            localStorage.setItem('g1_cl_preset', clPreset);
+
+            alert("Connection credentials applied! Reloading database client...");
+            initSupabase();
+            refreshShowroom();
+            renderAdminPanelData();
+        }
+
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('productId').value;
+            const title = document.getElementById('productTitle').value.trim();
+            const price = document.getElementById('productPrice').value.trim();
+            const desc = document.getElementById('productDesc').value.trim();
+            
+            if (!id && !uploadedImagesBase64[0]) {
+                alert("Please upload at least a primary thumbnail image.");
+                return;
+            }
+
+            const pData = {
+                title,
+                price,
+                desc,
+                imgs: [...uploadedImagesBase64]
+            };
+
+            const saveBtn = document.getElementById('submitBtn');
+            saveBtn.innerText = "Syncing...";
+            saveBtn.disabled = true;
+
+            try {
+                if (supabaseClient) {
+                    const dbPayload = {
+                        title: pData.title,
+                        price: pData.price,
+                        description: pData.desc,
+                        img1: pData.imgs[0],
+                        img2: pData.imgs[1],
+                        img3: pData.imgs[2]
+                    };
+
+                    if (id) {
+                        // Update existing entry
+                        const { error } = await supabaseClient
+                            .from('products')
+                            .update(dbPayload)
+                            .eq('id', parseInt(id));
+                        if (error) throw error;
+                    } else {
+                        // Insert new entry
+                        const { error } = await supabaseClient
+                            .from('products')
+                            .insert([dbPayload]);
+                        if (error) throw error;
+                    }
+                } else {
+                    // Fallback storage
+                    if (id) {
+                        products = products.map(item => {
+                            if (item.id === id) {
+                                return {
+                                    id,
+                                    title: pData.title,
+                                    price: pData.price,
+                                    desc: pData.desc,
+                                    imgs: [
+                                        pData.imgs[0] || item.imgs[0],
+                                        pData.imgs[1] || item.imgs[1],
+                                        pData.imgs[2] || item.imgs[2]
+                                    ]
+                                };
+                            }
+                            return item;
+                        });
+                    } else {
+                        products.push({
+                            id: Date.now().toString(),
+                            title: pData.title,
+                            price: pData.price,
+                            desc: pData.desc,
+                            imgs: [...pData.imgs]
+                        });
+                    }
+                    localStorage.setItem('g1_inventory', JSON.stringify(products));
+                }
+
+                alert("Product saved to database successfully.");
+                resetForm();
+                await refreshShowroom();
+                renderAdminInventoryList();
+            } catch(err) {
+                console.error("Save failed", err);
+                alert("Failed to save product: " + err.message);
+            } finally {
+                saveBtn.innerText = "Save Product";
+                saveBtn.disabled = false;
+            }
+        }
+
+        function editProduct(id) {
+            const p = products.find(prod => prod.id === id);
+            if (p) {
+                resetForm(); 
+                document.getElementById('productId').value = p.id;
+                document.getElementById('productTitle').value = p.title;
+                document.getElementById('productPrice').value = p.price;
+                document.getElementById('productDesc').value = p.desc;
+                
+                uploadedImagesBase64 = [...p.imgs];
+
+                for (let i = 1; i <= 3; i++) {
+                    if (p.imgs[i-1]) {
+                        const preview = document.getElementById(`imgPreview${i}`);
+                        preview.src = p.imgs[i-1];
+                        preview.classList.remove('hidden');
+                        document.getElementById(`uploadText${i}`).classList.add('hidden');
+                        document.getElementById(`deleteBtnSlot${i}`).classList.remove('hidden');
+                    }
+                }
+                
+                document.getElementById('formTitle').innerText = "Modify Mattress Configuration";
+                document.getElementById('submitBtn').innerText = "Apply Corrections";
+                window.scrollTo({ top: document.getElementById('adminTabCatalog').offsetTop - 20, behavior: 'smooth' });
+            }
+        }
+
+        async function deleteProduct(id) {
+            if (confirm("Confirm removal of this model variation from display records?")) {
+                try {
+                    if (supabaseClient) {
+                        const { error } = await supabaseClient
+                            .from('products')
+                            .delete()
+                            .eq('id', parseInt(id));
+                        if (error) throw error;
+                    } else {
+                        products = products.filter(p => p.id !== id);
+                        localStorage.setItem('g1_inventory', JSON.stringify(products));
+                    }
+                    alert("Product removed from database.");
+                    await refreshShowroom();
+                    renderAdminInventoryList();
+                } catch(err) {
+                    console.error("Delete failed", err);
+                    alert("Failed to delete product: " + err.message);
+                }
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('productForm').reset();
+            document.getElementById('productId').value = "";
+            uploadedImagesBase64 = ["", "", ""];
+            
+            for (let i = 1; i <= 3; i++) {
+                deleteSlotImage(null, i);
+            }
+
+            document.getElementById('formTitle').innerText = "Create New Mattress Entry";
+            document.getElementById('submitBtn').innerText = "Save Product";
+        }
+
+        // Hamburger Menu toggle
+        document.getElementById('menuBtn').addEventListener('click', () => {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        });
+
+        function toggleMenu() {
+            document.getElementById('mobileMenu').classList.add('hidden');
+        }
+
+        function scrollToContact() {
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
