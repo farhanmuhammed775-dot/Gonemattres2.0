@@ -195,17 +195,7 @@
                 <h2 class="text-3xl font-black text-white tracking-tight mt-1">Our Collection</h2>
             </div>
             
-            <!-- Dynamic Database Setup Tip (Only shows to visitors when catalog is empty) -->
-            <div id="setupHelpBanner" class="hidden glass-panel rounded-2xl p-6 mb-8 border border-amber-500/20">
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <div>
-                        <h4 class="text-white font-bold flex items-center gap-2">
-                            <span class="text-amber-500">⚡</span> Setup Demo Data or Connect Database
-                        </h4>
-                        <p class="text-slate-300 text-sm mt-1">You are currently running in mock demo mode. Tap the logo 5 times to open the Admin Portal and enter your Supabase & Cloudinary credentials to publish live mattresses!</p>
-                    </div>
-                </div>
-            </div>
+            <!-- Products catalog is loaded dynamically below -->
 
             <!-- Products Grid -->
             <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -678,7 +668,6 @@
                             desc: item.description,
                             imgs: [item.img1 || "", item.img2 || "", item.img3 || ""]
                         }));
-                        document.getElementById('setupHelpBanner').classList.add('hidden');
                         return;
                     }
                 } catch(e) {
@@ -691,7 +680,7 @@
             if (!localStorage.getItem('g1_inventory')) {
                 localStorage.setItem('g1_inventory', JSON.stringify(products));
             }
-            document.getElementById('setupHelpBanner').classList.remove('hidden');
+            // Fallback load completed
         }
 
         // Secret Trigger handler for opening the Admin Modal
