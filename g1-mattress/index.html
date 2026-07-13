@@ -605,6 +605,15 @@
         const ADMIN_USER = "admin";
         const ADMIN_PASS = "G1mattress";
 
+        // =========================================================================
+        // HARDCODE YOUR KEYS HERE so the database works for all customers on any device:
+        const SUPABASE_DEFAULT_URL = "https://meriwnifcaevgshgdxaq.supabase.co";
+        const SUPABASE_DEFAULT_KEY = "YOUR_SUPABASE_PUBLISHABLE_KEY"; // REPLACE THIS WITH YOUR KEY FROM SUPABASE!
+
+        const CLOUDINARY_DEFAULT_NAME = "dpoabinfr";
+        const CLOUDINARY_DEFAULT_PRESET = "g1mattress";
+        // =========================================================================
+
         const placeholderImg = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'><rect width='300' height='300' fill='%230f172a'/><text x='50%27 y='50%27 font-family='sans-serif' font-size='14' fill='%23475569' text-anchor='middle' dy='.3em'>No Photo Loaded</text></svg>";
 
         // Preloaded fallback items if Database connection is not yet configured
@@ -638,9 +647,9 @@
 
         // Initialize Supabase & Fetch Products
         function initSupabase() {
-            const dbUrl = localStorage.getItem('g1_db_url');
-            const dbKey = localStorage.getItem('g1_db_key');
-            if (dbUrl && dbKey) {
+            const dbUrl = localStorage.getItem('g1_db_url') || SUPABASE_DEFAULT_URL;
+            const dbKey = localStorage.getItem('g1_db_key') || SUPABASE_DEFAULT_KEY;
+            if (dbUrl && dbKey && !dbKey.includes("YOUR_SUPABASE")) {
                 try {
                     supabaseClient = supabase.createClient(dbUrl, dbKey);
                     console.log("Supabase Connection Initiated.");
@@ -769,10 +778,10 @@
 
         // UPLOAD TO CLOUDINARY LOGIC
         async function uploadImageToCloudinary(base64Data) {
-            const clName = localStorage.getItem('g1_cl_name');
-            const clPreset = localStorage.getItem('g1_cl_preset');
+            const clName = localStorage.getItem('g1_cl_name') || CLOUDINARY_DEFAULT_NAME;
+            const clPreset = localStorage.getItem('g1_cl_preset') || CLOUDINARY_DEFAULT_PRESET;
 
-            if (!clName || !clPreset) {
+            if (!clName || !clPreset || clName.includes("YOUR_CLOUDINARY")) {
                 // If keys are missing, return base64 to save directly in Supabase or localstorage
                 return base64Data;
             }
