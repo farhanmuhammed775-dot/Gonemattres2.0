@@ -879,10 +879,10 @@
 
         function verifyAdminCredentials(e) {
             e.preventDefault();
-            const u = document.getElementById('authUsername').value;
-            const p = document.getElementById('authPassword').value;
+            const u = document.getElementById('authUsername').value.trim().toLowerCase();
+            const p = document.getElementById('authPassword').value.trim().toLowerCase();
 
-            if (u === ADMIN_USER && p === ADMIN_PASS) {
+            if (u === ADMIN_USER.toLowerCase() && p === ADMIN_PASS.toLowerCase()) {
                 isAdminLoggedIn = true;
                 closeAdminModal();
                 showSection('adminView');
