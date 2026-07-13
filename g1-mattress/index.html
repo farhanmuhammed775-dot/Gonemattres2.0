@@ -227,8 +227,13 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
                     <!-- Left: Interactive Image Slider with Zoom -->
                     <div>
-                        <div class="zoom-container rounded-2xl border border-slate-800 bg-slate-950 aspect-square flex items-center justify-center relative shadow-inner overflow-hidden" id="zoomBox" onmousemove="zoomIn(event)" onmouseleave="zoomReset()">
-                            <img id="detailMainImg" src="" alt="Product view" class="w-full h-full object-cover">
+                        <div class="zoom-container group rounded-2xl border border-slate-850 bg-slate-950 aspect-square flex items-center justify-center relative shadow-inner overflow-hidden cursor-pointer" id="zoomBox" onmousemove="zoomIn(event)" onmouseleave="zoomReset()" onclick="openLightbox()">
+                            <img id="detailMainImg" src="" alt="Product view" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <!-- Tap to zoom overlay indicator -->
+                            <div class="absolute bottom-4 right-4 bg-slate-950/80 backdrop-blur-sm border border-slate-800/80 p-2.5 rounded-xl text-slate-400 group-hover:text-amber-500 transition-colors pointer-events-none flex items-center gap-1.5 shadow-lg">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"></path></svg>
+                                <span class="text-[9px] font-black uppercase tracking-wider hidden sm:inline">Tap to Zoom</span>
+                            </div>
                         </div>
                         <!-- Slider Controls -->
                         <div class="flex items-center justify-between mt-6 px-2">
@@ -505,6 +510,51 @@
             <div class="p-5 border-t border-slate-800 flex justify-end gap-3 bg-slate-900">
                 <button type="button" onclick="cancelCrop()" class="px-5 py-2.5 text-xs font-bold text-slate-400 hover:text-slate-200 transition">Cancel</button>
                 <button type="button" onclick="executeCropAndSave()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-black px-6 py-2.5 rounded-xl text-xs transition shadow-lg shadow-amber-500/10">Crop & Fit Perfectly</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= 6. LIGHTBOX ZOOM MODAL ================= -->
+    <div id="lightboxModal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-[60] flex flex-col items-center justify-between hidden opacity-0 transition-opacity duration-300 p-4 select-none">
+        <!-- Lightbox Header -->
+        <div class="w-full max-w-4xl flex justify-between items-center py-4 border-b border-slate-900">
+            <span id="lightboxCounter" class="text-xs font-bold text-slate-400 uppercase tracking-widest">Image 1 of 3</span>
+            <button onclick="closeLightbox()" class="text-slate-400 hover:text-white p-2 rounded-xl hover:bg-slate-900 transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+
+        <!-- Lightbox Viewport -->
+        <div class="flex-grow w-full max-w-4xl flex items-center justify-center overflow-auto p-4 relative" id="lightboxViewport">
+            <img id="lightboxImg" src="" alt="Zoomed view" class="max-w-full max-h-[60vh] object-contain transition-transform duration-200 ease-out origin-center cursor-grab active:cursor-grabbing" style="transform: scale(1);">
+        </div>
+
+        <!-- Lightbox Footer -->
+        <div class="w-full max-w-4xl flex flex-col items-center gap-4 py-6 border-t border-slate-900">
+            <!-- Zoom Buttons (+ / - / Reset) -->
+            <div class="flex items-center gap-3 bg-slate-900 border border-slate-800 rounded-2xl p-1.5 shadow-lg">
+                <button onclick="adjustLightboxZoom(-0.25)" class="text-slate-400 hover:text-white hover:bg-slate-950 p-2.5 rounded-xl transition flex items-center justify-center w-10 h-10">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15"></path></svg>
+                </button>
+                <span id="zoomLevelDisplay" class="text-xs font-bold text-amber-500 w-16 text-center font-mono">100%</span>
+                <button onclick="adjustLightboxZoom(0.25)" class="text-slate-400 hover:text-white hover:bg-slate-950 p-2.5 rounded-xl transition flex items-center justify-center w-10 h-10">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path></svg>
+                </button>
+                <div class="border-l border-slate-800 h-6 mx-1"></div>
+                <button onclick="resetLightboxZoom()" class="text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-950 px-3.5 py-2.5 rounded-xl transition">
+                    Reset
+                </button>
+            </div>
+
+            <!-- Lightbox Carousel Arrows -->
+            <div class="flex items-center gap-6">
+                <button onclick="navigateLightbox(-1)" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-white p-3 rounded-full transition shadow-md">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"></path></svg>
+                </button>
+                <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Tap arrows to slide · Double tap image to zoom</span>
+                <button onclick="navigateLightbox(1)" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-white p-3 rounded-full transition shadow-md">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"></path></svg>
+                </button>
             </div>
         </div>
     </div>
@@ -1244,6 +1294,121 @@
         function scrollToContact() {
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
+
+        // ================= 6. LIGHTBOX ZOOM LOGIC =================
+        let lightboxScale = 1.0;
+        
+        function openLightbox() {
+            const modal = document.getElementById('lightboxModal');
+            const detailImg = document.getElementById('detailMainImg');
+            const lightboxImg = document.getElementById('lightboxImg');
+            
+            if (!detailImg.src || detailImg.src.includes("No%20Photo%20Loaded") || detailImg.src.startsWith("data:")) return;
+            
+            lightboxImg.src = detailImg.src;
+            document.getElementById('lightboxCounter').innerText = document.getElementById('imageCounter').innerText;
+            
+            resetLightboxZoom();
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-100');
+                modal.classList.add('opacity-100');
+            }, 10);
+        }
+
+        function closeLightbox() {
+            const modal = document.getElementById('lightboxModal');
+            modal.classList.remove('opacity-100');
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('opacity-0');
+            }, 300);
+        }
+
+        function adjustLightboxZoom(amount) {
+            setLightboxZoom(lightboxScale + amount);
+        }
+
+        function setLightboxZoom(zoomVal) {
+            lightboxScale = Math.min(Math.max(zoomVal, 0.5), 3.0);
+            const img = document.getElementById('lightboxImg');
+            img.style.transform = `scale(${lightboxScale})`;
+            
+            document.getElementById('zoomLevelDisplay').innerText = `${Math.round(lightboxScale * 100)}%`;
+            
+            // Adjust pointer-events based on scale
+            if (lightboxScale > 1.0) {
+                img.classList.replace('cursor-grab', 'cursor-grabbing');
+            } else {
+                img.style.transformOrigin = 'center center';
+                img.classList.replace('cursor-grabbing', 'cursor-grab');
+            }
+        }
+
+        function resetLightboxZoom() {
+            setLightboxZoom(1.0);
+            const viewport = document.getElementById('lightboxViewport');
+            viewport.scrollLeft = (viewport.scrollWidth - viewport.clientWidth) / 2;
+            viewport.scrollTop = (viewport.scrollHeight - viewport.clientHeight) / 2;
+        }
+
+        function navigateLightbox(dir) {
+            if (dir === 1) {
+                nextImage();
+            } else {
+                prevImage();
+            }
+            // Update lightbox content
+            document.getElementById('lightboxImg').src = document.getElementById('detailMainImg').src;
+            document.getElementById('lightboxCounter').innerText = document.getElementById('imageCounter').innerText;
+            resetLightboxZoom();
+        }
+
+        // Draggable panning inside Lightbox viewport
+        let isDragging = false;
+        let startX, startY, scrollLeft, scrollTop;
+        const viewport = document.getElementById('lightboxViewport');
+
+        viewport.addEventListener('mousedown', (e) => {
+            if (lightboxScale <= 1.0) return;
+            isDragging = true;
+            startX = e.pageX - viewport.offsetLeft;
+            startY = e.pageY - viewport.offsetTop;
+            scrollLeft = viewport.scrollLeft;
+            scrollTop = viewport.scrollTop;
+        });
+
+        viewport.addEventListener('mouseleave', () => { isDragging = false; });
+        viewport.addEventListener('mouseup', () => { isDragging = false; });
+        
+        viewport.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            const x = e.pageX - viewport.offsetLeft;
+            const y = e.pageY - viewport.offsetTop;
+            const walkX = (x - startX) * 1.5;
+            const walkY = (y - startY) * 1.5;
+            viewport.scrollLeft = scrollLeft - walkX;
+            viewport.scrollTop = scrollTop - walkY;
+        });
+
+        // Double tap / double click zoom support
+        let lastTapTime = 0;
+        document.getElementById('lightboxImg').addEventListener('click', (e) => {
+            const currentTime = new Date().getTime();
+            const tapDelay = currentTime - lastTapTime;
+            if (tapDelay < 300 && tapDelay > 0) {
+                if (lightboxScale === 1.0) {
+                    setLightboxZoom(2.0);
+                } else {
+                    resetLightboxZoom();
+                }
+                e.preventDefault();
+            }
+            lastTapTime = currentTime;
+        });
     </script>
 </body>
 </html>
