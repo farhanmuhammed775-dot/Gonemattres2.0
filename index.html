@@ -318,14 +318,27 @@
                         <form id="productForm" onsubmit="handleFormSubmit(event)">
                             <input type="hidden" id="productId">
                             
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
-                                <div class="sm:col-span-2">
-                                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Product Title</label>
-                                    <input type="text" id="productTitle" required placeholder="e.g., Signature Luxury Ortho Mattress" class="w-full bg-slate-950 rounded-xl border-slate-800 p-3.5 border text-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none text-sm font-semibold transition">
+                            <div class="mb-6">
+                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Product Title</label>
+                                <input type="text" id="productTitle" required placeholder="e.g., Signature Luxury Ortho Mattress" class="w-full bg-slate-950 rounded-xl border-slate-800 p-3.5 border text-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none text-sm font-semibold transition">
+                            </div>
+
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+                                <div>
+                                    <label class="block text-[10px] font-black text-amber-500 uppercase tracking-wider mb-1.5">Single Price (INR)</label>
+                                    <input type="text" id="productPriceSingle" required placeholder="e.g., 9,999/-" class="w-full bg-slate-950 rounded-xl border-slate-800 p-3.5 border text-white focus:border-amber-500 focus:ring-1 focus:ring-amber-500/20 outline-none text-xs font-bold transition">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Price (INR)</label>
-                                    <input type="text" id="productPrice" required placeholder="e.g., 19,999/-" class="w-full bg-slate-950 rounded-xl border-slate-800 p-3.5 border text-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none text-sm font-semibold transition">
+                                    <label class="block text-[10px] font-black text-amber-500 uppercase tracking-wider mb-1.5">Double Price (INR)</label>
+                                    <input type="text" id="productPriceDouble" required placeholder="e.g., 14,999/-" class="w-full bg-slate-950 rounded-xl border-slate-800 p-3.5 border text-white focus:border-amber-500 focus:ring-1 focus:ring-amber-500/20 outline-none text-xs font-bold transition">
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-black text-amber-500 uppercase tracking-wider mb-1.5">Queen Price (INR)</label>
+                                    <input type="text" id="productPriceQueen" required placeholder="e.g., 18,999/-" class="w-full bg-slate-950 rounded-xl border-slate-800 p-3.5 border text-white focus:border-amber-500 focus:ring-1 focus:ring-amber-500/20 outline-none text-xs font-bold transition">
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-black text-amber-500 uppercase tracking-wider mb-1.5">King Price (INR)</label>
+                                    <input type="text" id="productPriceKing" required placeholder="e.g., 22,999/-" class="w-full bg-slate-950 rounded-xl border-slate-800 p-3.5 border text-white focus:border-amber-500 focus:ring-1 focus:ring-amber-500/20 outline-none text-xs font-bold transition">
                                 </div>
                             </div>
                             
@@ -611,7 +624,11 @@
             {
                 id: "101",
                 title: "Signature Luxury G-ONE Roll Pack Mattress",
-                price: "19,999/-",
+                price_single: "9,999/-",
+                price_double: "14,999/-",
+                price_queen: "18,999/-",
+                price_king: "22,999/-",
+                price: "9,999/-",
                 desc: "Compact roll-pack delivery layout engineered with multi-layer high-resilience memory foam.\n\nDesigned for complete lumbar alignment, edge-to-edge support configuration, and zero partner motion transfer. Includes high-durability cotton cover knit.",
                 imgs: ["https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&q=80&w=600", "", ""]
             }
@@ -664,7 +681,11 @@
                         products = data.map(item => ({
                             id: item.id.toString(),
                             title: item.title,
-                            price: item.price,
+                            price_single: item.price_single || item.price,
+                            price_double: item.price_double || "",
+                            price_queen: item.price_queen || "",
+                            price_king: item.price_king || "",
+                            price: item.price_single || item.price,
                             desc: item.description,
                             imgs: [item.img1 || "", item.img2 || "", item.img3 || ""]
                         }));
@@ -907,7 +928,7 @@
             refreshShowroom();
         }
 
-        let selectedSize = "Queen";
+        let selectedSize = "Single";
 
         function selectSize(size) {
             selectedSize = size;
@@ -926,8 +947,19 @@
             const customDiv = document.getElementById('customSizeInputs');
             if (size === 'Custom') {
                 customDiv.classList.remove('hidden');
+                document.getElementById('detailPrice').innerHTML = `
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 mt-1">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Custom Size:</span>
+                        <a href="https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Hello G-one Mattress! I would like to inquire about the custom size price for: ' + activeProduct.title)}" target="_blank" class="inline-flex items-center gap-1.5 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/20 px-3.5 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition shadow-sm">
+                            For Price Contact WhatsApp 💬
+                        </a>
+                    </div>
+                `;
             } else {
                 customDiv.classList.add('hidden');
+                const sizeLower = size.toLowerCase();
+                const displayPrice = activeProduct[`price_${sizeLower}`] || activeProduct.price_single || activeProduct.price;
+                document.getElementById('detailPrice').innerText = `₹${displayPrice}`;
             }
 
             updateWhatsAppLink();
@@ -941,6 +973,8 @@
             if (!activeProduct) return;
 
             let sizeText = selectedSize;
+            let priceText = "";
+
             if (selectedSize === 'Custom') {
                 const len = document.getElementById('customLength').value.trim();
                 const wid = document.getElementById('customWidth').value.trim();
@@ -949,9 +983,13 @@
                 } else {
                     sizeText = `Custom (Dimensions pending)`;
                 }
+                priceText = "Contact for Quote";
+            } else {
+                const sizeLower = selectedSize.toLowerCase();
+                priceText = `₹${activeProduct[`price_${sizeLower}`] || activeProduct.price_single || activeProduct.price}`;
             }
 
-            const messageText = `Hello G-one Mattress!\n\nI checked your luxury website catalog and would like to confirm my order:\n\n• Product: ${activeProduct.title}\n• Size: ${sizeText}\n• Price: ₹${activeProduct.price}\n• Product ID: ${activeProduct.id}\n\nPlease confirm availability and logistics parameters for delivery.`;
+            const messageText = `Hello G-one Mattress!\n\nI checked your luxury website catalog and would like to confirm my order:\n\n• Product: ${activeProduct.title}\n• Size: ${sizeText}\n• Price: ${priceText}\n• Product ID: ${activeProduct.id}\n\nPlease confirm availability and logistics parameters for delivery.`;
             
             document.getElementById('whatsappOrderBtn').href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(messageText)}`;
         }
@@ -962,13 +1000,12 @@
 
             activeImgIndex = 0;
             document.getElementById('detailTitle').innerText = activeProduct.title;
-            document.getElementById('detailPrice').innerText = `₹${activeProduct.price}`;
             document.getElementById('detailDesc').innerText = activeProduct.desc;
             
-            // Reset sizing selection to default (Queen)
+            // Reset sizing selection to default (Single)
             document.getElementById('customLength').value = "";
             document.getElementById('customWidth').value = "";
-            selectSize("Queen");
+            selectSize("Single");
             
             updateCarouselImage();
             showSection('detailView');
@@ -1026,20 +1063,33 @@
 
             products.forEach(p => {
                 const primaryImg = p.imgs[0] || placeholderImg;
+                const displayPrice = p.price_single || p.price;
                 grid.innerHTML += `
                     <div onclick="openProductDetails('${p.id}')" class="bg-slate-900 rounded-3xl shadow-xl hover:shadow-amber-500/5 hover:-translate-y-1.5 border border-slate-800/80 overflow-hidden cursor-pointer flex flex-col group transition-all duration-300">
                         <div class="aspect-square bg-slate-950 overflow-hidden relative flex items-center justify-center">
                             <img src="${primaryImg}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                             <div class="absolute inset-0 bg-slate-950/10 group-hover:bg-transparent transition"></div>
+                            <!-- Single Size Badge to show low price attraction -->
+                            <div class="absolute bottom-4 left-4 bg-slate-950/85 backdrop-blur-sm border border-slate-800 px-3 py-1.5 rounded-xl flex items-center gap-1.5 shadow-lg shadow-black/30">
+                                <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></span>
+                                <span class="text-[9px] font-black tracking-widest text-slate-300 uppercase">Single Size Base</span>
+                            </div>
                         </div>
-                        <div class="p-6 flex flex-col flex-grow">
-                            <h3 class="text-lg font-bold text-white mb-2 group-hover:text-amber-500 transition line-clamp-2 leading-tight">${p.title}</h3>
-                            <div class="text-amber-500 font-black mb-3 text-xl">₹${p.price}</div>
-                            <p class="text-slate-400 text-xs line-clamp-2 mb-6 flex-grow leading-relaxed font-light">${p.desc}</p>
-                            <span class="text-xs font-bold text-amber-500 inline-flex items-center gap-1.5 uppercase tracking-wider">
-                                View Specs & Buy
-                                <svg class="w-3.5 h-3.5 transform group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
-                            </span>
+                        <div class="p-6 flex flex-col flex-grow justify-between">
+                            <div>
+                                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-amber-500 transition line-clamp-2 leading-tight">${p.title}</h3>
+                                <p class="text-slate-400 text-xs line-clamp-2 mb-6 leading-relaxed font-light">${p.desc}</p>
+                            </div>
+                            <div class="flex items-end justify-between pt-4 border-t border-slate-850 mt-auto">
+                                <div>
+                                    <span class="text-[8px] font-bold text-slate-500 uppercase tracking-widest block mb-0.5">Starts From</span>
+                                    <div class="text-amber-500 font-black text-xl">₹${displayPrice}</div>
+                                </div>
+                                <span class="text-xs font-bold text-amber-500 inline-flex items-center gap-1.5 uppercase tracking-wider group-hover:translate-x-1 transition-transform">
+                                    View Specs & Buy
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path></svg>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -1128,7 +1178,10 @@
             e.preventDefault();
             const id = document.getElementById('productId').value;
             const title = document.getElementById('productTitle').value.trim();
-            const price = document.getElementById('productPrice').value.trim();
+            const priceSingle = document.getElementById('productPriceSingle').value.trim();
+            const priceDouble = document.getElementById('productPriceDouble').value.trim();
+            const priceQueen = document.getElementById('productPriceQueen').value.trim();
+            const priceKing = document.getElementById('productPriceKing').value.trim();
             const desc = document.getElementById('productDesc').value.trim();
             
             if (!id && !uploadedImagesBase64[0]) {
@@ -1138,7 +1191,11 @@
 
             const pData = {
                 title,
-                price,
+                price_single: priceSingle,
+                price_double: priceDouble,
+                price_queen: priceQueen,
+                price_king: priceKing,
+                price: priceSingle,
                 desc,
                 imgs: [...uploadedImagesBase64]
             };
@@ -1151,7 +1208,11 @@
                 if (supabaseClient) {
                     const dbPayload = {
                         title: pData.title,
-                        price: pData.price,
+                        price: pData.price_single,
+                        price_single: pData.price_single,
+                        price_double: pData.price_double,
+                        price_queen: pData.price_queen,
+                        price_king: pData.price_king,
                         description: pData.desc,
                         img1: pData.imgs[0],
                         img2: pData.imgs[1],
@@ -1180,7 +1241,11 @@
                                 return {
                                     id,
                                     title: pData.title,
-                                    price: pData.price,
+                                    price_single: pData.price_single,
+                                    price_double: pData.price_double,
+                                    price_queen: pData.price_queen,
+                                    price_king: pData.price_king,
+                                    price: pData.price_single,
                                     desc: pData.desc,
                                     imgs: [
                                         pData.imgs[0] || item.imgs[0],
@@ -1195,7 +1260,11 @@
                         products.push({
                             id: Date.now().toString(),
                             title: pData.title,
-                            price: pData.price,
+                            price_single: pData.price_single,
+                            price_double: pData.price_double,
+                            price_queen: pData.price_queen,
+                            price_king: pData.price_king,
+                            price: pData.price_single,
                             desc: pData.desc,
                             imgs: [...pData.imgs]
                         });
@@ -1222,7 +1291,10 @@
                 resetForm(); 
                 document.getElementById('productId').value = p.id;
                 document.getElementById('productTitle').value = p.title;
-                document.getElementById('productPrice').value = p.price;
+                document.getElementById('productPriceSingle').value = p.price_single || p.price || "";
+                document.getElementById('productPriceDouble').value = p.price_double || "";
+                document.getElementById('productPriceQueen').value = p.price_queen || "";
+                document.getElementById('productPriceKing').value = p.price_king || "";
                 document.getElementById('productDesc').value = p.desc;
                 
                 uploadedImagesBase64 = [...p.imgs];
