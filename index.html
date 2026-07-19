@@ -76,6 +76,15 @@
             -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
+
+        /* Hide scrollbar for category filter bar */
+        .scrollbar-none::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-none {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
     </style>
 </head>
 <body class="bg-brand-950 font-sans min-h-screen flex flex-col text-slate-100 antialiased">
@@ -190,12 +199,17 @@
         
         <!-- ================= 1. CUSTOMER CATALOG VIEW ================= -->
         <section id="catalogView" class="view-section">
-            <div id="productShowcaseAnchor" class="border-b border-slate-800 pb-4 mb-10">
+            <div id="productShowcaseAnchor" class="border-b border-slate-800 pb-4 mb-4">
                 <span class="text-xs font-bold uppercase tracking-widest text-amber-500">Premium Showroom</span>
                 <h2 class="text-3xl font-black text-white tracking-tight mt-1">Our Collection</h2>
             </div>
             
-            <!-- Products catalog is loaded dynamically below -->
+            <!-- Premium Category Selector Bar -->
+            <div class="mb-10 overflow-x-auto scrollbar-none">
+                <div class="flex gap-2.5 pb-2.5 whitespace-nowrap min-w-max" id="categoryFilterContainer">
+                    <!-- Loaded dynamically via JavaScript -->
+                </div>
+            </div>
 
             <!-- Products Grid -->
             <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -318,9 +332,28 @@
                         <form id="productForm" onsubmit="handleFormSubmit(event)">
                             <input type="hidden" id="productId">
                             
-                            <div class="mb-6">
-                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Product Title</label>
-                                <input type="text" id="productTitle" required placeholder="e.g., Signature Luxury Ortho Mattress" class="w-full bg-slate-950 rounded-xl border-slate-800 p-3.5 border text-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none text-sm font-semibold transition">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                                <div class="md:col-span-2">
+                                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Product Title</label>
+                                    <input type="text" id="productTitle" required placeholder="e.g., Signature Luxury Ortho Mattress" class="w-full bg-slate-950 rounded-xl border-slate-800 p-3.5 border text-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none text-sm font-semibold transition">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Category</label>
+                                    <select id="productCategory" required class="w-full bg-slate-950 rounded-xl border border-slate-800 p-3.5 text-slate-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none text-sm font-semibold transition">
+                                        <option value="BUFFALO ORIGINAL">BUFFALO ORIGINAL</option>
+                                        <option value="LATEX HYRICH">LATEX HYRICH</option>
+                                        <option value="MEMORY HYBRID">MEMORY HYBRID</option>
+                                        <option value="SPRING">SPRING</option>
+                                        <option value="MEDICATED">MEDICATED</option>
+                                        <option value="SEMI MEDICATED">SEMI MEDICATED</option>
+                                        <option value="KIDS PRO COMFORTER">KIDS PRO COMFORTER</option>
+                                        <option value="LATEX GOLD HYRICH PLUS">LATEX GOLD HYRICH PLUS</option>
+                                        <option value="FULL FOAM">FULL FOAM</option>
+                                        <option value="PILLOW">PILLOW</option>
+                                        <option value="EUROTOP">EUROTOP</option>
+                                        <option value="PILLOW TOP">PILLOW TOP</option>
+                                    </select>
+                                </div>
                             </div>
 
                             <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
@@ -624,6 +657,7 @@
             {
                 id: "101",
                 title: "Signature Luxury G-ONE Roll Pack Mattress",
+                category: "BUFFALO ORIGINAL",
                 price_single: "9,999/-",
                 price_double: "14,999/-",
                 price_queen: "18,999/-",
@@ -681,6 +715,7 @@
                         products = data.map(item => ({
                             id: item.id.toString(),
                             title: item.title,
+                            category: item.category || "BUFFALO ORIGINAL",
                             price_single: item.price_single || item.price,
                             price_double: item.price_double || "",
                             price_queen: item.price_queen || "",
@@ -731,6 +766,7 @@
         window.addEventListener('DOMContentLoaded', () => {
             initSupabase();
             checkUrlHash();
+            renderCategoryFilters();
             refreshShowroom();
         });
 
@@ -924,8 +960,53 @@
         }
 
         function showCatalogView() {
+            selectedCategory = "All";
+            renderCategoryFilters();
             showSection('catalogView');
             refreshShowroom();
+        }
+
+        // Categories Configuration
+        const CATEGORIES = [
+            "All", 
+            "BUFFALO ORIGINAL", 
+            "LATEX HYRICH", 
+            "MEMORY HYBRID", 
+            "SPRING", 
+            "MEDICATED", 
+            "SEMI MEDICATED", 
+            "KIDS PRO COMFORTER", 
+            "LATEX GOLD HYRICH PLUS", 
+            "FULL FOAM", 
+            "PILLOW", 
+            "EUROTOP", 
+            "PILLOW TOP"
+        ];
+        let selectedCategory = "All";
+
+        function renderCategoryFilters() {
+            const container = document.getElementById('categoryFilterContainer');
+            if (!container) return;
+            container.innerHTML = "";
+
+            CATEGORIES.forEach(cat => {
+                const isActive = (cat === selectedCategory);
+                const activeClasses = isActive 
+                    ? "bg-amber-500/10 border-amber-500 text-amber-500 shadow-lg shadow-amber-500/5 font-extrabold" 
+                    : "bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700 font-semibold";
+                
+                container.innerHTML += `
+                    <button onclick="filterByCategory('${cat}')" class="px-5 py-2.5 rounded-xl border text-[10px] uppercase font-bold tracking-wider transition-all duration-300 ${activeClasses}">
+                        ${cat}
+                    </button>
+                `;
+            });
+        }
+
+        function filterByCategory(cat) {
+            selectedCategory = cat;
+            renderCategoryFilters();
+            renderCustomerGrid();
         }
 
         let selectedSize = "Single";
@@ -1056,14 +1137,21 @@
             const grid = document.getElementById('productsGrid');
             grid.innerHTML = "";
 
-            if (products.length === 0) {
-                grid.innerHTML = `<p class="text-slate-500 col-span-full text-center py-16 font-semibold">No luxury mattresses listed in the showroom catalog currently.</p>`;
+            // Filter products dynamically
+            const filteredProducts = selectedCategory === "All" 
+                ? products 
+                : products.filter(p => p.category && p.category.toUpperCase() === selectedCategory.toUpperCase());
+
+            if (filteredProducts.length === 0) {
+                grid.innerHTML = `<p class="text-slate-500 col-span-full text-center py-16 font-semibold">No luxury mattresses listed under the "${selectedCategory}" category currently.</p>`;
                 return;
             }
 
-            products.forEach(p => {
+            filteredProducts.forEach(p => {
                 const primaryImg = p.imgs[0] || placeholderImg;
                 const displayPrice = p.price_single || p.price;
+                const categoryLabel = p.category ? `<span class="text-[9px] font-black tracking-widest text-amber-500 uppercase block mb-1">${p.category}</span>` : "";
+
                 grid.innerHTML += `
                     <div onclick="openProductDetails('${p.id}')" class="bg-slate-900 rounded-3xl shadow-xl hover:shadow-amber-500/5 hover:-translate-y-1.5 border border-slate-800/80 overflow-hidden cursor-pointer flex flex-col group transition-all duration-300">
                         <div class="aspect-square bg-slate-950 overflow-hidden relative flex items-center justify-center">
@@ -1077,6 +1165,7 @@
                         </div>
                         <div class="p-6 flex flex-col flex-grow justify-between">
                             <div>
+                                ${categoryLabel}
                                 <h3 class="text-lg font-bold text-white mb-2 group-hover:text-amber-500 transition line-clamp-2 leading-tight">${p.title}</h3>
                                 <p class="text-slate-400 text-xs line-clamp-2 mb-6 leading-relaxed font-light">${p.desc}</p>
                             </div>
@@ -1178,6 +1267,7 @@
             e.preventDefault();
             const id = document.getElementById('productId').value;
             const title = document.getElementById('productTitle').value.trim();
+            const category = document.getElementById('productCategory').value;
             const priceSingle = document.getElementById('productPriceSingle').value.trim();
             const priceDouble = document.getElementById('productPriceDouble').value.trim();
             const priceQueen = document.getElementById('productPriceQueen').value.trim();
@@ -1191,6 +1281,7 @@
 
             const pData = {
                 title,
+                category,
                 price_single: priceSingle,
                 price_double: priceDouble,
                 price_queen: priceQueen,
@@ -1208,6 +1299,7 @@
                 if (supabaseClient) {
                     const dbPayload = {
                         title: pData.title,
+                        category: pData.category,
                         price: pData.price_single,
                         price_single: pData.price_single,
                         price_double: pData.price_double,
@@ -1241,6 +1333,7 @@
                                 return {
                                     id,
                                     title: pData.title,
+                                    category: pData.category,
                                     price_single: pData.price_single,
                                     price_double: pData.price_double,
                                     price_queen: pData.price_queen,
@@ -1260,6 +1353,7 @@
                         products.push({
                             id: Date.now().toString(),
                             title: pData.title,
+                            category: pData.category,
                             price_single: pData.price_single,
                             price_double: pData.price_double,
                             price_queen: pData.price_queen,
@@ -1291,6 +1385,7 @@
                 resetForm(); 
                 document.getElementById('productId').value = p.id;
                 document.getElementById('productTitle').value = p.title;
+                document.getElementById('productCategory').value = p.category || "BUFFALO ORIGINAL";
                 document.getElementById('productPriceSingle').value = p.price_single || p.price || "";
                 document.getElementById('productPriceDouble').value = p.price_double || "";
                 document.getElementById('productPriceQueen').value = p.price_queen || "";
