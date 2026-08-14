@@ -1202,14 +1202,51 @@
             img.style.transformOrigin = `center center`;
         }
 
+        function sortProductsByCategory(prodList) {
+            const CATEGORY_ORDER = [
+                "BUFFALO ORIGINAL",
+                "LATEX HYRICH",
+                "MEMORY HYBRID",
+                "SPRING",
+                "MEDICATED",
+                "SEMI MEDICATED",
+                "KIDS PRO COMFORTER",
+                "LATEX GOLD HYRICH PLUS",
+                "FULL FOAM",
+                "EUROTOP",
+                "PILLOW TOP",
+                "PILLOW"
+            ];
+            
+            return [...prodList].sort((a, b) => {
+                const catA = (a.category || "").toUpperCase().trim();
+                const catB = (b.category || "").toUpperCase().trim();
+                
+                let idxA = CATEGORY_ORDER.indexOf(catA);
+                let idxB = CATEGORY_ORDER.indexOf(catB);
+                
+                if (idxA === -1) idxA = 99;
+                if (idxB === -1) idxB = 99;
+                
+                if (idxA !== idxB) {
+                    return idxA - idxB;
+                }
+                
+                return parseInt(b.id) - parseInt(a.id);
+            });
+        }
+
         function renderCustomerGrid() {
             const grid = document.getElementById('productsGrid');
             grid.innerHTML = "";
 
             // Filter products dynamically
-            const filteredProducts = selectedCategory === "All" 
+            let filteredProducts = selectedCategory === "All" 
                 ? products 
                 : products.filter(p => p.category && p.category.toUpperCase() === selectedCategory.toUpperCase());
+
+            // Sort products by category order priority
+            filteredProducts = sortProductsByCategory(filteredProducts);
 
             if (filteredProducts.length === 0) {
                 grid.innerHTML = `<p class="text-slate-500 col-span-full text-center py-16 font-semibold">No luxury mattresses listed under the "${selectedCategory}" category currently.</p>`;
