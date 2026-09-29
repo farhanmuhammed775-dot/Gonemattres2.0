@@ -340,6 +340,8 @@
                                 <div>
                                     <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Category</label>
                                     <select id="productCategory" required class="w-full bg-slate-950 rounded-xl border border-slate-800 p-3.5 text-slate-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none text-sm font-semibold transition">
+                                        <option value="BUFFALO GRIDEX PRO">BUFFALO GRIDEX PRO</option>
+                                        <option value="BUFFALO GRID PLUS">BUFFALO GRID PLUS</option>
                                         <option value="BUFFALO ORIGINAL">BUFFALO ORIGINAL</option>
                                         <option value="LATEX HYRICH">LATEX HYRICH</option>
                                         <option value="MEMORY HYBRID">MEMORY HYBRID</option>
@@ -969,6 +971,8 @@
         // Categories Configuration
         const CATEGORIES = [
             "All", 
+            "BUFFALO GRIDEX PRO",
+            "BUFFALO GRID PLUS",
             "BUFFALO ORIGINAL", 
             "LATEX HYRICH", 
             "MEMORY HYBRID", 
@@ -1135,6 +1139,8 @@
 
         function sortProductsByCategory(prodList) {
             const CATEGORY_ORDER = [
+                "BUFFALO GRIDEX PRO",
+                "BUFFALO GRID PLUS",
                 "BUFFALO ORIGINAL",
                 "LATEX HYRICH",
                 "MEMORY HYBRID",
